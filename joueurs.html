@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Track - Joueurs et Équipes</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      vertical-align: top;
+      color: #333;
+    }
+    th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+      text-align: left;
+    }
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    tr:hover {
+      background-color: #f0f0f0;
+      transition: background-color 0.2s ease-in-out;
+    }
+    .logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 5px;
+      background-color: #eee;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    .team-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .players-cell {
+      color: #555;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Team Track</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="continents.html">Continents</a></li>
+        <li><a href="joueurs.html" class="active">Joueurs</a></li>
+        <li><a href="jeux.html">Jeux</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Équipes eSport et leurs joueurs</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Équipe</th>
+          <th>Joueurs</th>
+        </tr>
+      </thead>
+      <tbody id="table-joueurs"></tbody>
+    </table>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("data.csv")
+        .then(res => {
+          if (!res.ok) throw new Error("Erreur chargement CSV");
+          return res.text();
+        })
+        .then(text => {
+          const lignes = text.trim().split("\n").slice(1);
+          const data = lignes.map(line => {
+            const [jeu, equipe, continent, region, joueur, pays, gains, logo] = line.split(",");
+            return { jeu, equipe, joueur, logo: logo?.trim(), gains: parseFloat(gains) };
+          });
+
+          const equipesMap = new Map();
+
+          data.forEach(({ equipe, joueur, logo }) => {
+            if (!equipe || !joueur) return;
+            if (!equipesMap.has(equipe)) {
+              equipesMap.set(equipe, { joueurs: new Set(), logo });
+            }
+            equipesMap.get(equipe).joueurs.add(joueur);
+          });
+
+          const tbody = document.getElementById("table-joueurs");
+          tbody.innerHTML = "";
+
+          equipesMap.forEach(({ joueurs, logo }, equipe) => {
+            const tdEquipe = document.createElement("td");
+            tdEquipe.classList.add("team-cell");
+
+            if (logo) {
+              const img = document.createElement("img");
+              img.src = `logos/${logo}`;
+              img.alt = equipe;
+              img.classList.add("logo");
+              tdEquipe.appendChild(img);
+            }
+
+            const spanEquipe = document.createElement("span");
+            spanEquipe.textContent = equipe;
+            tdEquipe.appendChild(spanEquipe);
+
+            const tdJoueurs = document.createElement("td");
+            tdJoueurs.classList.add("players-cell");
+            tdJoueurs.textContent = Array.from(joueurs).join(", ");
+
+            const tr = document.createElement("tr");
+            tr.appendChild(tdEquipe);
+            tr.appendChild(tdJoueurs);
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById("table-joueurs").innerHTML = `<tr><td colspan="2">Erreur lors du chargement des données.</td></tr>`;
+        });
+    });
+  </script>
+</body>
+</html>
