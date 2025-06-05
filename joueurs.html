@@ -61,8 +61,8 @@
       <ul>
         <li><a href="index.html">Accueil</a></li>
         <li><a href="continents.html">Continents</a></li>
-        <li><a href="jeux.html">Jeux</a></li>
         <li><a href="joueurs.html" class="active">Joueurs</a></li>
+        <li><a href="jeux.html">Jeux</a></li>
       </ul>
     </nav>
   </header>
@@ -90,42 +90,42 @@
         .then(text => {
           const lignes = text.trim().split("\n").slice(1);
           const data = lignes.map(line => {
-            const [jeu, equipe, continent, region, joueur, pays, gains] = line.split(",");
-            return { jeu, equipe, joueur, gains: parseFloat(gains) };
+            const [jeu, equipe, continent, region, joueur, pays, gains, logo] = line.split(",");
+            return { jeu, equipe, joueur, logo: logo?.trim(), gains: parseFloat(gains) };
           });
 
           const equipesMap = new Map();
 
-          data.forEach(({ equipe, joueur }) => {
+          data.forEach(({ equipe, joueur, logo }) => {
+            if (!equipe || !joueur) return;
             if (!equipesMap.has(equipe)) {
-              equipesMap.set(equipe, new Set());
+              equipesMap.set(equipe, { joueurs: new Set(), logo });
             }
-            equipesMap.get(equipe).add(joueur);
+            equipesMap.get(equipe).joueurs.add(joueur);
           });
 
           const tbody = document.getElementById("table-joueurs");
           tbody.innerHTML = "";
 
-          equipesMap.forEach((joueursSet, equipe) => {
-            // Logo path
-            const logoPath = `logos/${equipe.replace(/\s/g, "")}.png`;
-            const img = new Image();
-            img.src = logoPath;
-            img.alt = equipe;
-            img.classList.add("logo");
-            img.onerror = () => img.remove();
-
+          equipesMap.forEach(({ joueurs, logo }, equipe) => {
             const tdEquipe = document.createElement("td");
             tdEquipe.classList.add("team-cell");
-            tdEquipe.appendChild(img);
+
+            if (logo) {
+              const img = document.createElement("img");
+              img.src = `logos/${logo}`;
+              img.alt = equipe;
+              img.classList.add("logo");
+              tdEquipe.appendChild(img);
+            }
+
             const spanEquipe = document.createElement("span");
             spanEquipe.textContent = equipe;
             tdEquipe.appendChild(spanEquipe);
 
             const tdJoueurs = document.createElement("td");
             tdJoueurs.classList.add("players-cell");
-            // Transforme Set en array et join par virgule
-            tdJoueurs.textContent = Array.from(joueursSet).join(", ");
+            tdJoueurs.textContent = Array.from(joueurs).join(", ");
 
             const tr = document.createElement("tr");
             tr.appendChild(tdEquipe);

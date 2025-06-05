@@ -6,34 +6,41 @@
   <title>Team Track - Jeux eSport</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-  #top-joueurs table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-}
+    #top-joueurs table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
 
-#top-joueurs th, #top-joueurs td {
-  border: 1px solid #ccc;
-  padding: 8px 12px;
-  text-align: left;
-  color: #333;
-}
+    #top-joueurs th, #top-joueurs td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      text-align: left;
+      color: #333;
+    }
 
-#top-joueurs th {
-  background-color: #f5f5f5;
-  font-weight: 600;
-}
+    #top-joueurs th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+    }
 
-#top-joueurs tr:nth-child(even) {
-  background-color: #fafafa;
-}
+    #top-joueurs tr:nth-child(even) {
+      background-color: #fafafa;
+    }
 
-#top-joueurs tr:hover {
-  background-color: #f0f0f0;
-  transition: background-color 0.2s ease-in-out;
-}
+    #top-joueurs tr:hover {
+      background-color: #f0f0f0;
+      transition: background-color 0.2s ease-in-out;
+    }
 
+    .jeux-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
@@ -43,15 +50,15 @@
       <ul>
         <li><a href="index.html">Accueil</a></li>
         <li><a href="continents.html">Continents</a></li>
-        <li><a href="jeux.html" class="active">Jeux</a></li>
         <li><a href="joueurs.html">Joueurs</a></li>
+        <li><a href="jeux.html" class="active">Jeux</a></li> 
       </ul>
     </nav>
   </header>
 
   <main>
     <h2>Liste des Jeux eSport</h2>
-    <ul id="liste-jeux"></ul>
+    <div id="liste-jeux" class="jeux-container"></div>
 
     <section id="top-joueurs">
       <!-- Le top 5 joueurs du jeu sélectionné apparaîtra ici -->
@@ -76,17 +83,13 @@
             };
           });
 
-          // Liste unique des jeux
           const jeux = [...new Set(data.map(d => d.jeu).filter(Boolean))];
-
-          const ulJeux = document.getElementById("liste-jeux");
+          const container = document.getElementById("liste-jeux");
           const topSection = document.getElementById("top-joueurs");
 
-          // Fonction affichage top 5 joueurs d'un jeu
           function afficherTopJoueurs(jeu) {
             const joueursDuJeu = data
               .filter(d => d.jeu === jeu && d.joueur && !isNaN(d.gains))
-              // Pour éviter doublons joueurs, on prend le max gain par joueur sur ce jeu
               .reduce((acc, curr) => {
                 const exist = acc.find(j => j.joueur === curr.joueur);
                 if (!exist) acc.push(curr);
@@ -119,12 +122,13 @@
             topSection.innerHTML = html;
           }
 
-          // Crée la liste des jeux cliquables
+          // Création des boutons
           jeux.forEach(jeu => {
-            const li = document.createElement("li");
-            li.textContent = jeu;
-            li.addEventListener("click", () => afficherTopJoueurs(jeu));
-            ulJeux.appendChild(li);
+            const btn = document.createElement("button");
+            btn.textContent = jeu;
+            btn.classList.add("continent-btn"); // Style de bouton existant
+            btn.addEventListener("click", () => afficherTopJoueurs(jeu));
+            container.appendChild(btn);
           });
         })
         .catch(err => {

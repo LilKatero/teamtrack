@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((res) => res.text())
     .then((text) => {
       const lignes = text.trim().split("\n");
-      const enTete = lignes[0].split(",");
       const data = lignes.slice(1).map((ligne) => {
         const champs = ligne.split(",");
         return {
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
           joueur: champs[4],
           pays: champs[5],
           gains: champs[6],
-          logo: champs[7] ? champs[7].trim() : null // trim pour éviter espaces
+          logo: champs[7] ? champs[7].trim() : null
         };
       });
 
@@ -23,10 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       continents.forEach((continent) => {
         const li = document.createElement("li");
-        li.textContent = continent;
         li.classList.add("continent-item");
 
-        li.addEventListener("click", () => {
+        const btn = document.createElement("button");
+        btn.textContent = continent;
+        btn.classList.add("continent-btn");
+
+        btn.addEventListener("click", () => {
           const equipes = data
             .filter((d) => d.continent === continent)
             .map((d) => ({ equipe: d.equipe, logo: d.logo }))
@@ -45,20 +47,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const liEquipe = document.createElement("li");
             liEquipe.style.display = "flex";
             liEquipe.style.alignItems = "center";
+            liEquipe.style.marginBottom = "10px";
 
             if (logo) {
-              console.log(`Chargement du logo: logos/${logo}`);
               const img = document.createElement("img");
               img.src = `logos/${logo}`;
               img.alt = equipe;
-              img.style.width = "40px";
-              img.style.height = "40px";
-              img.style.objectFit = "contain";
-              img.style.marginRight = "10px";
-              img.style.borderRadius = "4px";
+              img.classList.add("logo");
               liEquipe.appendChild(img);
-            } else {
-              console.log(`Pas de logo pour l'équipe: ${equipe}`);
             }
 
             const span = document.createElement("span");
@@ -67,9 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ul.appendChild(liEquipe);
           });
+
           result.appendChild(ul);
         });
 
+        li.appendChild(btn);
         liste.appendChild(li);
       });
     })
