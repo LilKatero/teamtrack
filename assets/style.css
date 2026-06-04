@@ -1,0 +1,129 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top, #111827, #0b0f19);
+    color: white;
+}
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 25px;
+    font-size: 26px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* SEARCH BAR */
+input {
+    display: block;
+    margin: 20px auto;
+    width: 60%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+input:focus {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.02);
+}
+
+/* CONTAINER */
+#players {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* CARD */
+.card {
+    background: linear-gradient(145deg, #161b22, #0f141c);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 15px;
+    padding: 18px;
+    transition: 0.3s;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 200, 255, 0.4);
+    box-shadow: 0 12px 30px rgba(0, 200, 255, 0.15);
+}
+
+/* PLAYER NAME */
+.card h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #00d4ff;
+}
+
+/* TEXT */
+.card p {
+    margin: 5px 0;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+/* BADGE STYLE (option futur) */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(0, 212, 255, 0.15);
+    color: #00d4ff;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* ANIMATION ENTRY */
+.card {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #00d4ff;
+    color: black;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background: #00aacc;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    transition: 0.3s;
+}

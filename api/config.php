@@ -1,0 +1,4 @@
+
+<?php
+define("PANDASCORE_TOKEN", "ojUCJ6Num0FhKGLs9Y3ImFl_DB49R6i2df3WX4ZTxulPAU1ncCQ");
+?>
